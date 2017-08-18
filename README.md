@@ -65,6 +65,18 @@ with -g option, pulse first :
 <----- bit width ----->     (-b option)
 ```
 
+## Installation
+
+```
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ make package
+$ sudo dpkg hackrf_ook-0.0.1-Linux.deb
+```
+
+
 ## Example Usage :
 
 Sending `1110101010111010101010101` message with 1700 µs bit width, where 1 equal 416 µs high and 0 equal 1284 µs high, and with pulse bit first then gap, at 433.92 Mhz, repeat forever, 10 ms pause between each message. This work with my cheap remote controlled outlet (brand = Trefilaction, model = RSL366T) :
