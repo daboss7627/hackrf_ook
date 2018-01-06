@@ -361,14 +361,14 @@ int main (int argc, char** argv)
 	/* Setup the HackRF for transmitting at full power, 8M samples/s, ~27MHz */
 	fprintf(stderr, "Setting up the HackRF...\n");
 
-	// Initialize the HackRF
+	// Initialize the HackRF support
 	result = hackrf_init();
 	if (result != HACKRF_SUCCESS) {
 		fprintf(stderr, "hackrf_init() failed: %s (%d)\n", hackrf_error_name(result), result);
 		return EXIT_FAILURE;
 	}
 
-	// Open the HackRF
+	// Open the HackRF device
 	result = hackrf_open(&device);
 	if (result != HACKRF_SUCCESS) {
 		fprintf(stderr, "hackrf_open() failed: %s (%d)\n", hackrf_error_name(result), result);

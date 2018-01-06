@@ -73,7 +73,7 @@ $ cd build
 $ cmake ..
 $ make
 $ make package
-$ sudo dpkg hackrf_ook-0.0.1-Linux.deb
+$ sudo dpkg -i hackrf_ook-0.0.1-Linux.deb
 ```
 
 
