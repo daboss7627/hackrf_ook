@@ -1,8 +1,8 @@
 # hackrf_ook
 Great Scott Gadgets HackRF OOK transmit poc.
 
-This is tool make [HackRF One](https://greatscottgadgets.com/hackrf) emit ASK-OOK signal. The primary test setup is to emulate a 27 Mhz Cardin S46 TX2 garage door remote control.
-`hackrf_ook` compute samples and use libhackrf to transmit the signal with default parameters or values specified on the command line.
+This is a tool to make [HackRF One](https://greatscottgadgets.com/hackrf) emit an ASK-OOK signal. The primary test setup is to emulate a 27 Mhz Cardin S46 TX2 garage door remote control.
+`hackrf_ook` computes samples and uses libhackrf to transmit the signal with default parameters or values specified on the command line.
 
 Current available options are :
 
@@ -79,7 +79,7 @@ $ sudo dpkg -i hackrf_ook-0.0.1-Linux.deb
 
 ## Example Usage :
 
-Sending `1110101010111010101010101` message with 1700 µs bit width, where 1 equal 416 µs high and 0 equal 1284 µs high, and with pulse bit first then gap, at 433.92 Mhz, repeat forever, 10 ms pause between each message. This work with my cheap remote controlled outlet (brand = Trefilaction, model = RSL366T) :
+Sending `1110101010111010101010101` message with 1700 µs bit width, where 1 equal 416 µs high and 0 equal 1284 µs high, and with pulse bit first then gap, at 433.92 Mhz, repeat forever, 10 ms pause between each message. This works with my cheap remote controlled outlet (brand = Trefilaction, model = RSL366T) :
 
 ```
 ./hackrf_ook -s 0 -b 1700 -0 1284 -1 416 -p 10000 -m 1110101010111010101010101 -f 433920000 -g
@@ -97,7 +97,7 @@ Freeing I samples
 Freeing Q samples
 ```
 
-Sending `010100100101011011110011` at 27.195 Mhz with bit width of 2104 us, 0 = 2104 µs, 1 = 692 µs, with a pause of 30.548 ms at the end of each message, repeat 10 time. Message start with a 6456 µs preamble (high). This is for my Cardin S466 TX2 garage door remote control :
+Sending `010100100101011011110011` at 27.195 Mhz with bit width of 2104 µs, 0 = 1368 µs, 1 = 692 µs, with a pause of 30.548 ms at the end of each message, repeat 10 time. Message starts with a 6156 µs preamble (high). This is for my Cardin S466 TX2 garage door remote control :
 
 ```
 ./hackrf_ook -s 6156 -b 2104 -0 1368 -1 692 -p 30548 -m 010100100101011011110011 -f 27195000 -r 10
@@ -115,7 +115,7 @@ Freeing I samples
 Freeing Q samples
 ```
 
-Message bits, pulses duration and timing can be readed with RTL-SDR device and [rtl_433](https://github.com/merbanan/rtl_433) :
+Message bits, pulses duration and timing can be read with an RTL-SDR device and [rtl_433](https://github.com/merbanan/rtl_433) :
 
 ```
 % ./rtl_433 -f 27195000 -A
