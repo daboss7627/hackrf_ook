@@ -252,7 +252,7 @@ int main (int argc, char** argv)
 
 	/*
 	 * Precalc waveforms
-	 * We need to amplitute modulate a signal on top of the base frequency
+	 * We need to amplitude modulate a signal on top of the base frequency
 	 * So we use sin() and cos() and a full wave to make samples
 	 * A full wave is a complete angle rotation (2*Pi or Tau, in radian)
 	 * This take samprate/carrier_freq samples...
