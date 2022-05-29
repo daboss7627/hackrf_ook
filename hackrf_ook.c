@@ -84,7 +84,7 @@ int tx_callback(hackrf_transfer* transfer)
 {
 	// How much to do?
 	size_t count = transfer->valid_length;
-	
+
 	int i = 0;
 	while (i < count) {
 		// Not really sure what i'm doing here...
@@ -131,6 +131,15 @@ void printhelp(char *binname)
 	printf(" -h                   show this help\n");
 }
 
+int checkbinary(char *msg, int n)
+{
+	for(int i=0; i<n; i++) {
+		if(msg[i] != '0' & msg[i] != '1')
+			return(-1);
+	}
+	return(0);
+}
+
 int main (int argc, char** argv)
 {
 	int result;
@@ -144,7 +153,7 @@ int main (int argc, char** argv)
 			case 'f':
 				freq = (uint64_t)strtoll(optarg, &endptr, 10);
 				if (endptr == optarg || freq == 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -152,7 +161,7 @@ int main (int argc, char** argv)
 			case 'c':
 				ook_carrier = (int)strtol(optarg, &endptr, 10);
 				if (endptr == optarg || ook_carrier == 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -165,7 +174,7 @@ int main (int argc, char** argv)
 			case 's':
 				ook_start = (int)strtol(optarg, &endptr, 10) * 8;
 				if (endptr == optarg || ook_start < 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -173,7 +182,7 @@ int main (int argc, char** argv)
 			case 'b':
 				ook_bit = (int)strtol(optarg, &endptr, 10) * 8;
 				if (endptr == optarg || ook_bit == 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -181,7 +190,7 @@ int main (int argc, char** argv)
 			case '0':
 				ook_0 = (int)strtol(optarg, &endptr, 10) * 8;
 				if (endptr == optarg || ook_0 == 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -189,7 +198,7 @@ int main (int argc, char** argv)
 			case '1':
 				ook_1 = (int)strtol(optarg, &endptr, 10) * 8;
 				if (endptr == optarg || ook_1 == 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr,"You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -197,7 +206,7 @@ int main (int argc, char** argv)
 			case 'p':
 				ook_pause = (int)strtol(optarg, &endptr, 10) * 8;
 				if (endptr == optarg || ook_pause < 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -210,7 +219,7 @@ int main (int argc, char** argv)
 			case 'r':
 				ook_counter = (int)strtol(optarg, &endptr, 10);
 				if (endptr == optarg || ook_counter <= 0) {
-					printf("You must specify a valid number\n");
+					fprintf(stderr, "You must specify a valid number\n");
 					return(EXIT_FAILURE);
 				}
 				opt++;
@@ -233,8 +242,18 @@ int main (int argc, char** argv)
 		}
 	}
 
-	if (bits == NULL) 
-		bits = strdup(OOK_DEFAULT_MSG);
+	if(!opt) {
+		printhelp(argv[0]);
+		return(EXIT_FAILURE);
+	}
+
+	if (bits == NULL) {
+		fprintf(stderr, "You must use -m to set bits\n");
+		return(EXIT_FAILURE);
+	} else if(checkbinary(bits, ook_nbr_bits) != 0) {
+		fprintf(stderr, "Please only use '0' or '1' for bits!\n");
+		return(EXIT_FAILURE);
+	}
 
 	ook_msg_size = ook_start+(ook_bit*ook_nbr_bits)+ook_pause;
 	printf("Allocating %d I samples (%d+(%d*%d)+%d)\n", ook_msg_size, ook_start, ook_bit, ook_nbr_bits, ook_pause);
@@ -242,7 +261,7 @@ int main (int argc, char** argv)
 	txbufferI = malloc(ook_msg_size*sizeof(int8_t));
 	txbufferQ = malloc(ook_msg_size*sizeof(int8_t));
 	if (txbufferI == NULL || txbufferQ == NULL) {
-		printf("Error allocating memory!\n");
+		fprintf(stderr, "Error allocating memory!\n");
 		return(EXIT_FAILURE);
 	}
 	memset(txbufferI, 0, ook_msg_size*sizeof(int8_t));
@@ -252,7 +271,7 @@ int main (int argc, char** argv)
 
 	/*
 	 * Precalc waveforms
-	 * We need to amplitude modulate a signal on top of the base frequency
+	 * We need to amplitute modulate a signal on top of the base frequency
 	 * So we use sin() and cos() and a full wave to make samples
 	 * A full wave is a complete angle rotation (2*Pi or Tau, in radian)
 	 * This take samprate/carrier_freq samples...
