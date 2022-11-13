@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <inttypes.h>
 #include <glib.h>
 #include <libhackrf/hackrf.h>
 
@@ -347,7 +348,7 @@ int main (int argc, char** argv)
 		printf("_________");
 	printf("\n");
 
-	printf("%d bits to transmit at %llu Hz with a carrier frequency of %d Hz\n", ook_nbr_bits, freq, ook_carrier);
+	printf("%d bits to transmit at %"PRIu64" Hz with a carrier frequency of %d Hz\n", ook_nbr_bits, freq, ook_carrier);
 	printf("Preamble:%d(%dus)   pause:%d(%dus)   bit:%d(%dus)   0:%d(%dus)   1:%d(%dus)\n",
 			ook_start, ook_start/8,
 			ook_pause, ook_pause/8,
